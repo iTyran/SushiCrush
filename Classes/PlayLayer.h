@@ -10,6 +10,8 @@ class SushiSprite;
 class PlayLayer : public Layer
 {
 public:
+    PlayLayer();
+    ~PlayLayer();
     static Scene* createScene();
     CREATE_FUNC(PlayLayer);
     

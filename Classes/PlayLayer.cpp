@@ -6,6 +6,23 @@
 
 #define SUSHI_GAP (1)
 
+PlayLayer::PlayLayer()
+: spriteSheet(NULL)
+, m_matrix(NULL)
+, m_width(0)
+, m_height(0)
+, m_matrixLeftBottomX(0)
+, m_matrixLeftBottomY(0)
+{
+}
+
+PlayLayer::~PlayLayer()
+{
+    if (m_matrix) {
+        free(m_matrix);
+    }
+}
+
 Scene *PlayLayer::createScene()
 {
     auto scene = Scene::create();
