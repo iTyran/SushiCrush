@@ -66,7 +66,7 @@ void GameTile::changeComboTile(int orient)
         sprintf(name, "%d_3.png", _comboValue);
     }
     
-    _sprite->setSpriteFrame(SpriteFrame::create(name, Rect(0, 0, 95, 95)));
+    _sprite->setSpriteFrame(SpriteFrame::create(name, Rect(0, 0, _sprite->getContentSize().width, _sprite->getContentSize().height)));
 }
 
 
@@ -92,8 +92,3 @@ void GameTile::refreshDebugInfo()
     labValue->setPosition(Point(kTileSize / 2, kTileSize / 2));
     _sprite->addChild(labValue);
 }
-
-
-
-
-

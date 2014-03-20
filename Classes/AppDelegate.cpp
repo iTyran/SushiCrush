@@ -16,9 +16,15 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto director = Director::getInstance();
     auto glview = director->getOpenGLView();
     if(!glview) {
-        glview = GLView::create("My Game");
+        glview = GLView::create("Sushi crush");
         director->setOpenGLView(glview);
     }
+    
+    glview->setDesignResolutionSize(320, 480, ResolutionPolicy::FIXED_WIDTH);
+    std::vector<std::string> searchPath;
+    searchPath.push_back("w640");
+    CCFileUtils::getInstance()->setSearchPaths(searchPath);
+    director->setContentScaleFactor(640 / 320);
 
     // turn on display FPS
     director->setDisplayStats(true);

@@ -1,14 +1,6 @@
-//
-//  GameScene.cpp
-//  CandyCrush
-//
-//  Created by 郭 一鸣 on 14-3-19.
-//
-//
-
 #include "GameScene.h"
 
-Scene* GameScene::createScene()
+Scene *GameScene::createScene()
 {
     auto scene = Scene::create();
     auto layer = GameScene::create();
@@ -30,24 +22,19 @@ bool GameScene::init()
 
 void GameScene::initData()
 {
-    Size visibleSize = Director::getInstance()->getVisibleSize();
-    Point origin = Director::getInstance()->getVisibleOrigin();
+    Size winSize = Director::getInstance()->getWinSize();
     auto mapBg = Sprite::create("map.png");
-    mapBg->setPosition(Point(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
+    mapBg->setAnchorPoint(Point(0, 1));
+    mapBg->setPosition(Point(0, winSize.height));
     this->addChild(mapBg);
     
-    
     auto listener = EventListenerTouchOneByOne::create();
-    
     listener->onTouchBegan = CC_CALLBACK_2(GameScene::onTouchBegan, this);
-    
     _eventDispatcher->addEventListenerWithSceneGraphPriority(listener, this);
-    
     
     m_box = new GameBox(Size(kBoxWidth, kBoxHeight));
     m_box->layer = this;
     m_box->setLock(true);
-
 }
 
 void GameScene::onEnterTransitionDidFinish()
@@ -154,5 +141,3 @@ void GameScene::afterOneShineTrun(Node* sender)
         sprite->runAction(someAction);
     }
 }
-
-
