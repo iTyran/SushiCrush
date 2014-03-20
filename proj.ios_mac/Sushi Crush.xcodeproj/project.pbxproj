@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		0AECA7B418DAE5690046FAB4 /* w640 in Resources */ = {isa = PBXBuildFile; fileRef = 0AECA7B318DAE5690046FAB4 /* w640 */; };
 		0AECA7B518DAE5690046FAB4 /* w640 in Resources */ = {isa = PBXBuildFile; fileRef = 0AECA7B318DAE5690046FAB4 /* w640 */; };
+		0AECA7B818DAEF4D0046FAB4 /* SushiSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0AECA7B618DAEF4D0046FAB4 /* SushiSprite.cpp */; };
+		0AECA7B918DAEF4D0046FAB4 /* SushiSprite.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0AECA7B618DAEF4D0046FAB4 /* SushiSprite.cpp */; };
 		1AC6FB1F180E996B004C840B /* libbox2d Mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AC6FAFF180E9839004C840B /* libbox2d Mac.a */; };
 		1AC6FB20180E996B004C840B /* libchipmunk Mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AC6FAFD180E9839004C840B /* libchipmunk Mac.a */; };
 		1AC6FB21180E996B004C840B /* libcocos2dx Mac.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1AC6FAF9180E9839004C840B /* libcocos2dx Mac.a */; };
@@ -23,12 +25,8 @@
 		1D60589F0D05DD5A006BFB54 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D30AB110D05D00D00671497 /* Foundation.framework */; };
 		1DF5F4E00D08C38300B7A737 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1DF5F4DF0D08C38300B7A737 /* UIKit.framework */; };
 		288765A50DF7441C002DB57D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 288765A40DF7441C002DB57D /* CoreGraphics.framework */; };
-		3C38A61E18DADF09003D3769 /* GameBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C38A61718DADF09003D3769 /* GameBox.cpp */; };
-		3C38A61F18DADF09003D3769 /* GameBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C38A61718DADF09003D3769 /* GameBox.cpp */; };
-		3C38A62018DADF09003D3769 /* GameScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C38A61A18DADF09003D3769 /* GameScene.cpp */; };
-		3C38A62118DADF09003D3769 /* GameScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C38A61A18DADF09003D3769 /* GameScene.cpp */; };
-		3C38A62218DADF09003D3769 /* GameTile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C38A61C18DADF09003D3769 /* GameTile.cpp */; };
-		3C38A62318DADF09003D3769 /* GameTile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C38A61C18DADF09003D3769 /* GameTile.cpp */; };
+		3C38A62018DADF09003D3769 /* PlayLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C38A61A18DADF09003D3769 /* PlayLayer.cpp */; };
+		3C38A62118DADF09003D3769 /* PlayLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 3C38A61A18DADF09003D3769 /* PlayLayer.cpp */; };
 		503AE0F817EB97AB00D1A890 /* Icon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 503AE0F617EB97AB00D1A890 /* Icon.icns */; };
 		503AE10017EB989F00D1A890 /* AppController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 503AE0FB17EB989F00D1A890 /* AppController.mm */; };
 		503AE10117EB989F00D1A890 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 503AE0FC17EB989F00D1A890 /* main.m */; };
@@ -216,6 +214,8 @@
 
 /* Begin PBXFileReference section */
 		0AECA7B318DAE5690046FAB4 /* w640 */ = {isa = PBXFileReference; lastKnownFileType = folder; path = w640; sourceTree = "<group>"; };
+		0AECA7B618DAEF4D0046FAB4 /* SushiSprite.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = SushiSprite.cpp; path = ../Classes/SushiSprite.cpp; sourceTree = "<group>"; };
+		0AECA7B718DAEF4D0046FAB4 /* SushiSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SushiSprite.h; path = ../Classes/SushiSprite.h; sourceTree = "<group>"; };
 		1AC6FAE5180E9839004C840B /* cocos2d_libs.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = cocos2d_libs.xcodeproj; path = ../cocos2d/build/cocos2d_libs.xcodeproj; sourceTree = "<group>"; };
 		1ACB3243164770DE00914215 /* libcurl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcurl.a; path = ../../cocos2dx/platform/third_party/ios/libraries/libcurl.a; sourceTree = "<group>"; };
 		1AFAF8B316D35DE700DB1158 /* AppDelegate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = AppDelegate.cpp; path = ../Classes/AppDelegate.cpp; sourceTree = "<group>"; };
@@ -224,13 +224,8 @@
 		1D6058910D05DD3D006BFB54 /* Sushi Crush iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Sushi Crush iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1DF5F4DF0D08C38300B7A737 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		288765A40DF7441C002DB57D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		3C38A61718DADF09003D3769 /* GameBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GameBox.cpp; path = ../Classes/GameBox.cpp; sourceTree = "<group>"; };
-		3C38A61818DADF09003D3769 /* GameBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameBox.h; path = ../Classes/GameBox.h; sourceTree = "<group>"; };
-		3C38A61918DADF09003D3769 /* GameDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameDefine.h; path = ../Classes/GameDefine.h; sourceTree = "<group>"; };
-		3C38A61A18DADF09003D3769 /* GameScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GameScene.cpp; path = ../Classes/GameScene.cpp; sourceTree = "<group>"; };
-		3C38A61B18DADF09003D3769 /* GameScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameScene.h; path = ../Classes/GameScene.h; sourceTree = "<group>"; };
-		3C38A61C18DADF09003D3769 /* GameTile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = GameTile.cpp; path = ../Classes/GameTile.cpp; sourceTree = "<group>"; };
-		3C38A61D18DADF09003D3769 /* GameTile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GameTile.h; path = ../Classes/GameTile.h; sourceTree = "<group>"; };
+		3C38A61A18DADF09003D3769 /* PlayLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = PlayLayer.cpp; path = ../Classes/PlayLayer.cpp; sourceTree = "<group>"; };
+		3C38A61B18DADF09003D3769 /* PlayLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PlayLayer.h; path = ../Classes/PlayLayer.h; sourceTree = "<group>"; };
 		503AE0F617EB97AB00D1A890 /* Icon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = Icon.icns; sourceTree = "<group>"; };
 		503AE0F717EB97AB00D1A890 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		503AE0FA17EB989F00D1A890 /* AppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppController.h; path = ios/AppController.h; sourceTree = SOURCE_ROOT; };
@@ -339,13 +334,10 @@
 		15AA9C4015B7EC450033D6C2 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				3C38A61718DADF09003D3769 /* GameBox.cpp */,
-				3C38A61818DADF09003D3769 /* GameBox.h */,
-				3C38A61918DADF09003D3769 /* GameDefine.h */,
-				3C38A61A18DADF09003D3769 /* GameScene.cpp */,
-				3C38A61B18DADF09003D3769 /* GameScene.h */,
-				3C38A61C18DADF09003D3769 /* GameTile.cpp */,
-				3C38A61D18DADF09003D3769 /* GameTile.h */,
+				3C38A61A18DADF09003D3769 /* PlayLayer.cpp */,
+				3C38A61B18DADF09003D3769 /* PlayLayer.h */,
+				0AECA7B618DAEF4D0046FAB4 /* SushiSprite.cpp */,
+				0AECA7B718DAEF4D0046FAB4 /* SushiSprite.h */,
 				1AFAF8B316D35DE700DB1158 /* AppDelegate.cpp */,
 				1AFAF8B416D35DE700DB1158 /* AppDelegate.h */,
 			);
@@ -670,12 +662,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				503AE10017EB989F00D1A890 /* AppController.mm in Sources */,
-				3C38A61E18DADF09003D3769 /* GameBox.cpp in Sources */,
 				503AE10217EB989F00D1A890 /* RootViewController.mm in Sources */,
 				1AFAF8B716D35DE700DB1158 /* AppDelegate.cpp in Sources */,
-				3C38A62018DADF09003D3769 /* GameScene.cpp in Sources */,
-				3C38A62218DADF09003D3769 /* GameTile.cpp in Sources */,
+				3C38A62018DADF09003D3769 /* PlayLayer.cpp in Sources */,
 				503AE10117EB989F00D1A890 /* main.m in Sources */,
+				0AECA7B818DAEF4D0046FAB4 /* SushiSprite.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -683,11 +674,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3C38A62118DADF09003D3769 /* GameScene.cpp in Sources */,
+				3C38A62118DADF09003D3769 /* PlayLayer.cpp in Sources */,
+				0AECA7B918DAEF4D0046FAB4 /* SushiSprite.cpp in Sources */,
 				5087E75717EB910900C73F5D /* AppDelegate.cpp in Sources */,
 				503AE10517EB98FF00D1A890 /* main.cpp in Sources */,
-				3C38A61F18DADF09003D3769 /* GameBox.cpp in Sources */,
-				3C38A62318DADF09003D3769 /* GameTile.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
