@@ -16,6 +16,7 @@ public:
     CREATE_FUNC(PlayLayer);
     
     virtual bool init() override;
+    virtual void update(float dt) override;
 private:
     SpriteBatchNode *spriteSheet;
     SushiSprite **m_matrix;// 2D array which store (SushiSprite *).
@@ -25,9 +26,15 @@ private:
     float m_matrixLeftBottomX;
     float m_matrixLeftBottomY;
     
+    bool m_isAnimationing;
+    
     void initMatrix();
     void createAndDropSushi(int row, int col);
     Point positionOfItem(int row, int col);
+    void checkAndRemoveChain();
+    void getColChain(SushiSprite *sushi, std::list<SushiSprite *> &chainList);
+    void getRowChain(SushiSprite *sushi, std::list<SushiSprite *> &chainList);
+    void removeSushi(std::list<SushiSprite *> &sushiList);
 };
 
 #endif /* defined(__PlayLayer_H__) */
