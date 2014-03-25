@@ -20,11 +20,11 @@ bool AppDelegate::applicationDidFinishLaunching() {
         director->setOpenGLView(glview);
     }
     
-    glview->setDesignResolutionSize(320, 480, ResolutionPolicy::FIXED_WIDTH);
+    glview->setDesignResolutionSize(320.0f, 480.0f, ResolutionPolicy::FIXED_WIDTH);
     std::vector<std::string> searchPath;
     searchPath.push_back("w640");
     CCFileUtils::getInstance()->setSearchPaths(searchPath);
-    director->setContentScaleFactor(640 / 320);
+    director->setContentScaleFactor(640.0f / 320.0f);
 
     // turn on display FPS
     director->setDisplayStats(true);
