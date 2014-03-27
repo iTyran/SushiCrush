@@ -35,6 +35,8 @@ private:
     void getColChain(SushiSprite *sushi, std::list<SushiSprite *> &chainList);
     void getRowChain(SushiSprite *sushi, std::list<SushiSprite *> &chainList);
     void removeSushi(std::list<SushiSprite *> &sushiList);
+    void explodeSushi(SushiSprite *sushi);
+    void fillVacancies();
 };
 
 #endif /* defined(__PlayLayer_H__) */
