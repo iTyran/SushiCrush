@@ -14,6 +14,8 @@ PlayLayer::PlayLayer()
 , m_matrixLeftBottomX(0)
 , m_matrixLeftBottomY(0)
 , m_isAnimationing(true)//start with drop animation
+, m_isTouchEnable(true)
+, m_touchBeganSushi(NULL)
 {
 }
 
@@ -65,7 +67,180 @@ bool PlayLayer::init()
     
     initMatrix();
     scheduleUpdate();
+    
+    // bind touch event
+    auto touchListener = EventListenerTouchOneByOne::create();
+    touchListener->onTouchBegan = CC_CALLBACK_2(PlayLayer::onTouchBegan, this);
+    touchListener->onTouchMoved = CC_CALLBACK_2(PlayLayer::onTouchMoved, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(touchListener, this);
     return true;
+}
+
+SushiSprite *PlayLayer::sushiOfPoint(Point *point)
+{
+    SushiSprite *sushi = NULL;
+    Rect rect = Rect(0, 0, 0, 0);
+    
+    for (int i = 0; i < m_height * m_width; i++) {
+        sushi = m_matrix[i];
+        if (sushi) {
+            rect.origin.x = sushi->getPositionX() - (sushi->getContentSize().width / 2);
+            rect.origin.y = sushi->getPositionY() - (sushi->getContentSize().height / 2);
+            rect.size = sushi->getContentSize();
+            if (rect.containsPoint(*point)) {
+                return sushi;
+            }
+        }
+    }
+    
+    return NULL;
+}
+
+bool PlayLayer::onTouchBegan(Touch *touch, Event *unused)
+{
+    if (m_isTouchEnable) {
+        auto location = touch->getLocation();
+        m_touchBeganSushi = sushiOfPoint(&location);
+    }
+    return m_isTouchEnable;
+}
+
+void PlayLayer::onTouchMoved(Touch *touch, Event *unused)
+{
+    if (!m_touchBeganSushi || !m_isTouchEnable) {
+        return;
+    }
+    
+    SushiSprite *destSushi = NULL;
+    int row = m_touchBeganSushi->getRow();
+    int col = m_touchBeganSushi->getCol();
+    
+    auto location = touch->getLocation();
+    auto halfSushiWidth = m_touchBeganSushi->getContentSize().width / 2;
+    auto halfSushiHeight = m_touchBeganSushi->getContentSize().height / 2;
+    
+    auto  upRect = Rect(m_touchBeganSushi->getPositionX() - halfSushiWidth,
+                        m_touchBeganSushi->getPositionY() + halfSushiHeight,
+                        m_touchBeganSushi->getContentSize().width,
+                        m_touchBeganSushi->getContentSize().height);
+    
+    if (upRect.containsPoint(location)) {
+        row++;
+        if (row < m_height) {
+            destSushi = m_matrix[row * m_width + col];
+        }
+        swapSushi(m_touchBeganSushi, destSushi);
+        return;
+    }
+    
+    auto  downRect = Rect(m_touchBeganSushi->getPositionX() - halfSushiWidth,
+                        m_touchBeganSushi->getPositionY() - (halfSushiHeight * 3),
+                        m_touchBeganSushi->getContentSize().width,
+                        m_touchBeganSushi->getContentSize().height);
+    
+    if (downRect.containsPoint(location)) {
+        row--;
+        if (row >= 0) {
+            destSushi = m_matrix[row * m_width + col];
+        }
+        swapSushi(m_touchBeganSushi, destSushi);
+        return;
+    }
+    
+    auto  leftRect = Rect(m_touchBeganSushi->getPositionX() - (halfSushiWidth * 3),
+                          m_touchBeganSushi->getPositionY() - halfSushiHeight,
+                          m_touchBeganSushi->getContentSize().width,
+                          m_touchBeganSushi->getContentSize().height);
+    
+    if (leftRect.containsPoint(location)) {
+        col--;
+        if (col >= 0) {
+            destSushi = m_matrix[row * m_width + col];
+        }
+        swapSushi(m_touchBeganSushi, destSushi);
+        return;
+    }
+    
+    auto  rightRect = Rect(m_touchBeganSushi->getPositionX() + halfSushiWidth,
+                          m_touchBeganSushi->getPositionY() - halfSushiHeight,
+                          m_touchBeganSushi->getContentSize().width,
+                          m_touchBeganSushi->getContentSize().height);
+    
+    if (rightRect.containsPoint(location)) {
+        col++;
+        if (col < m_width) {
+            destSushi = m_matrix[row * m_width + col];
+        }
+        swapSushi(m_touchBeganSushi, destSushi);
+        return;
+    }
+    
+    // not a useful movement
+}
+
+void PlayLayer::swapSushi(SushiSprite *first, SushiSprite *second)
+{
+    m_isAnimationing = true;
+    m_isTouchEnable = false;
+    if (!first || !second) {
+        return;
+    }
+    
+    Point posOfFirst = first->getPosition();
+    Point posOfSecond = second->getPosition();
+    float time = 0.2;
+    
+    // 1.swap in matrix
+    m_matrix[first->getRow() * m_width + first->getCol()] = second;
+    m_matrix[second->getRow() * m_width + second->getCol()] = first;
+    int tmpRow = first->getRow();
+    int tmpCol = first->getCol();
+    first->setRow(second->getRow());
+    first->setCol(second->getCol());
+    second->setRow(tmpRow);
+    second->setCol(tmpCol);
+    
+    // 2.check for remove able
+    std::list<SushiSprite *> colChainListOfFirst;
+    getColChain(first, colChainListOfFirst);
+    
+    std::list<SushiSprite *> rowChainListOfFirst;
+    getRowChain(first, rowChainListOfFirst);
+    
+    std::list<SushiSprite *> colChainListOfSecond;
+    getColChain(second, colChainListOfSecond);
+    
+    std::list<SushiSprite *> rowChainListOfSecond;
+    getRowChain(second, rowChainListOfSecond);
+    
+    if (colChainListOfFirst.size() >= 3
+        || rowChainListOfFirst.size() >= 3
+        || colChainListOfSecond.size() >= 3
+        || rowChainListOfSecond.size() >= 3) {
+        // just swap
+        first->runAction(MoveTo::create(time, posOfSecond));
+        second->runAction(MoveTo::create(time, posOfFirst));
+        return;
+    }
+    
+    // no chain, swap back
+    m_matrix[first->getRow() * m_width + first->getCol()] = second;
+    m_matrix[second->getRow() * m_width + second->getCol()] = first;
+    tmpRow = first->getRow();
+    tmpCol = first->getCol();
+    first->setRow(second->getRow());
+    first->setCol(second->getCol());
+    second->setRow(tmpRow);
+    second->setCol(tmpCol);
+    
+    first->runAction(Sequence::create(
+                                      MoveTo::create(time, posOfSecond),
+                                      MoveTo::create(time, posOfFirst),
+                                      NULL));
+    second->runAction(Sequence::create(
+                                      MoveTo::create(time, posOfFirst),
+                                      MoveTo::create(time, posOfSecond),
+                                      NULL));
 }
 
 void PlayLayer::update(float dt)
@@ -82,6 +257,9 @@ void PlayLayer::update(float dt)
             }
         }
     }
+    
+    // if sushi is moving, ignore use touch event
+    m_isTouchEnable = !m_isAnimationing;
     
     if (!m_isAnimationing) {
         checkAndRemoveChain();
