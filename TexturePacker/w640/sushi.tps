@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>3</int>
         <key>texturePackerVersion</key>
-        <string>3.3.1</string>
+        <string>3.3.2</string>
         <key>fileName</key>
         <string>/Users/u0u0/Documents/project/SushiCrush/TexturePacker/w640/sushi.tps</string>
         <key>autoSDSettings</key>
@@ -167,15 +167,29 @@
             <enum type="SpriteSettings::TrimMode">Trim</enum>
             <key>heuristicMask</key>
             <false/>
+            <key>pivotPoint</key>
+            <enum type="SpriteSettings::PivotPoint">Center</enum>
         </struct>
         <key>fileList</key>
         <array>
+            <filename>sushi_1h.png</filename>
             <filename>sushi_1n.png</filename>
+            <filename>sushi_1v.png</filename>
+            <filename>sushi_2h.png</filename>
             <filename>sushi_2n.png</filename>
+            <filename>sushi_2v.png</filename>
+            <filename>sushi_3h.png</filename>
             <filename>sushi_3n.png</filename>
+            <filename>sushi_3v.png</filename>
+            <filename>sushi_4h.png</filename>
             <filename>sushi_4n.png</filename>
+            <filename>sushi_4v.png</filename>
+            <filename>sushi_5h.png</filename>
             <filename>sushi_5n.png</filename>
+            <filename>sushi_5v.png</filename>
+            <filename>sushi_6h.png</filename>
             <filename>sushi_6n.png</filename>
+            <filename>sushi_6v.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>

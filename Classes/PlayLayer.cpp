@@ -15,7 +15,9 @@ PlayLayer::PlayLayer()
 , m_matrixLeftBottomY(0)
 , m_isAnimationing(true)//start with drop animation
 , m_isTouchEnable(true)
-, m_touchBeganSushi(NULL)
+, m_srcSushi(NULL)
+, m_destSushi(NULL)
+, m_movingVertical(true)//drop animation is vertical
 {
 }
 
@@ -100,146 +102,150 @@ bool PlayLayer::onTouchBegan(Touch *touch, Event *unused)
 {
     if (m_isTouchEnable) {
         auto location = touch->getLocation();
-        m_touchBeganSushi = sushiOfPoint(&location);
+        m_srcSushi = sushiOfPoint(&location);
     }
     return m_isTouchEnable;
 }
 
 void PlayLayer::onTouchMoved(Touch *touch, Event *unused)
 {
-    if (!m_touchBeganSushi || !m_isTouchEnable) {
+    if (!m_srcSushi || !m_isTouchEnable) {
         return;
     }
     
-    SushiSprite *destSushi = NULL;
-    int row = m_touchBeganSushi->getRow();
-    int col = m_touchBeganSushi->getCol();
+    int row = m_srcSushi->getRow();
+    int col = m_srcSushi->getCol();
     
     auto location = touch->getLocation();
-    auto halfSushiWidth = m_touchBeganSushi->getContentSize().width / 2;
-    auto halfSushiHeight = m_touchBeganSushi->getContentSize().height / 2;
+    auto halfSushiWidth = m_srcSushi->getContentSize().width / 2;
+    auto halfSushiHeight = m_srcSushi->getContentSize().height / 2;
     
-    auto  upRect = Rect(m_touchBeganSushi->getPositionX() - halfSushiWidth,
-                        m_touchBeganSushi->getPositionY() + halfSushiHeight,
-                        m_touchBeganSushi->getContentSize().width,
-                        m_touchBeganSushi->getContentSize().height);
+    auto  upRect = Rect(m_srcSushi->getPositionX() - halfSushiWidth,
+                        m_srcSushi->getPositionY() + halfSushiHeight,
+                        m_srcSushi->getContentSize().width,
+                        m_srcSushi->getContentSize().height);
     
     if (upRect.containsPoint(location)) {
         row++;
         if (row < m_height) {
-            destSushi = m_matrix[row * m_width + col];
+            m_destSushi = m_matrix[row * m_width + col];
         }
-        swapSushi(m_touchBeganSushi, destSushi);
+        m_movingVertical = true;
+        swapSushi();
         return;
     }
     
-    auto  downRect = Rect(m_touchBeganSushi->getPositionX() - halfSushiWidth,
-                        m_touchBeganSushi->getPositionY() - (halfSushiHeight * 3),
-                        m_touchBeganSushi->getContentSize().width,
-                        m_touchBeganSushi->getContentSize().height);
+    auto  downRect = Rect(m_srcSushi->getPositionX() - halfSushiWidth,
+                        m_srcSushi->getPositionY() - (halfSushiHeight * 3),
+                        m_srcSushi->getContentSize().width,
+                        m_srcSushi->getContentSize().height);
     
     if (downRect.containsPoint(location)) {
         row--;
         if (row >= 0) {
-            destSushi = m_matrix[row * m_width + col];
+            m_destSushi = m_matrix[row * m_width + col];
         }
-        swapSushi(m_touchBeganSushi, destSushi);
+        m_movingVertical = true;
+        swapSushi();
         return;
     }
     
-    auto  leftRect = Rect(m_touchBeganSushi->getPositionX() - (halfSushiWidth * 3),
-                          m_touchBeganSushi->getPositionY() - halfSushiHeight,
-                          m_touchBeganSushi->getContentSize().width,
-                          m_touchBeganSushi->getContentSize().height);
+    auto  leftRect = Rect(m_srcSushi->getPositionX() - (halfSushiWidth * 3),
+                          m_srcSushi->getPositionY() - halfSushiHeight,
+                          m_srcSushi->getContentSize().width,
+                          m_srcSushi->getContentSize().height);
     
     if (leftRect.containsPoint(location)) {
         col--;
         if (col >= 0) {
-            destSushi = m_matrix[row * m_width + col];
+            m_destSushi = m_matrix[row * m_width + col];
         }
-        swapSushi(m_touchBeganSushi, destSushi);
+        m_movingVertical = false;
+        swapSushi();
         return;
     }
     
-    auto  rightRect = Rect(m_touchBeganSushi->getPositionX() + halfSushiWidth,
-                          m_touchBeganSushi->getPositionY() - halfSushiHeight,
-                          m_touchBeganSushi->getContentSize().width,
-                          m_touchBeganSushi->getContentSize().height);
+    auto  rightRect = Rect(m_srcSushi->getPositionX() + halfSushiWidth,
+                          m_srcSushi->getPositionY() - halfSushiHeight,
+                          m_srcSushi->getContentSize().width,
+                          m_srcSushi->getContentSize().height);
     
     if (rightRect.containsPoint(location)) {
         col++;
         if (col < m_width) {
-            destSushi = m_matrix[row * m_width + col];
+            m_destSushi = m_matrix[row * m_width + col];
         }
-        swapSushi(m_touchBeganSushi, destSushi);
+        m_movingVertical = false;
+        swapSushi();
         return;
     }
     
     // not a useful movement
 }
 
-void PlayLayer::swapSushi(SushiSprite *first, SushiSprite *second)
+void PlayLayer::swapSushi()
 {
     m_isAnimationing = true;
     m_isTouchEnable = false;
-    if (!first || !second) {
+    if (!m_srcSushi || !m_destSushi) {
+        m_movingVertical = true;
         return;
     }
     
-    Point posOfFirst = first->getPosition();
-    Point posOfSecond = second->getPosition();
+    Point posOfSrc = m_srcSushi->getPosition();
+    Point posOfDest = m_destSushi->getPosition();
     float time = 0.2;
     
     // 1.swap in matrix
-    m_matrix[first->getRow() * m_width + first->getCol()] = second;
-    m_matrix[second->getRow() * m_width + second->getCol()] = first;
-    int tmpRow = first->getRow();
-    int tmpCol = first->getCol();
-    first->setRow(second->getRow());
-    first->setCol(second->getCol());
-    second->setRow(tmpRow);
-    second->setCol(tmpCol);
+    m_matrix[m_srcSushi->getRow() * m_width + m_srcSushi->getCol()] = m_destSushi;
+    m_matrix[m_destSushi->getRow() * m_width + m_destSushi->getCol()] = m_srcSushi;
+    int tmpRow = m_srcSushi->getRow();
+    int tmpCol = m_srcSushi->getCol();
+    m_srcSushi->setRow(m_destSushi->getRow());
+    m_srcSushi->setCol(m_destSushi->getCol());
+    m_destSushi->setRow(tmpRow);
+    m_destSushi->setCol(tmpCol);
     
     // 2.check for remove able
     std::list<SushiSprite *> colChainListOfFirst;
-    getColChain(first, colChainListOfFirst);
+    getColChain(m_srcSushi, colChainListOfFirst);
     
     std::list<SushiSprite *> rowChainListOfFirst;
-    getRowChain(first, rowChainListOfFirst);
+    getRowChain(m_srcSushi, rowChainListOfFirst);
     
     std::list<SushiSprite *> colChainListOfSecond;
-    getColChain(second, colChainListOfSecond);
+    getColChain(m_destSushi, colChainListOfSecond);
     
     std::list<SushiSprite *> rowChainListOfSecond;
-    getRowChain(second, rowChainListOfSecond);
+    getRowChain(m_destSushi, rowChainListOfSecond);
     
     if (colChainListOfFirst.size() >= 3
         || rowChainListOfFirst.size() >= 3
         || colChainListOfSecond.size() >= 3
         || rowChainListOfSecond.size() >= 3) {
         // just swap
-        first->runAction(MoveTo::create(time, posOfSecond));
-        second->runAction(MoveTo::create(time, posOfFirst));
+        m_srcSushi->runAction(MoveTo::create(time, posOfDest));
+        m_destSushi->runAction(MoveTo::create(time, posOfSrc));
         return;
     }
     
-    // no chain, swap back
-    m_matrix[first->getRow() * m_width + first->getCol()] = second;
-    m_matrix[second->getRow() * m_width + second->getCol()] = first;
-    tmpRow = first->getRow();
-    tmpCol = first->getCol();
-    first->setRow(second->getRow());
-    first->setCol(second->getCol());
-    second->setRow(tmpRow);
-    second->setCol(tmpCol);
+    // 3.no chain, swap back
+    m_matrix[m_srcSushi->getRow() * m_width + m_srcSushi->getCol()] = m_destSushi;
+    m_matrix[m_destSushi->getRow() * m_width + m_destSushi->getCol()] = m_srcSushi;
+    tmpRow = m_srcSushi->getRow();
+    tmpCol = m_srcSushi->getCol();
+    m_srcSushi->setRow(m_destSushi->getRow());
+    m_srcSushi->setCol(m_destSushi->getCol());
+    m_destSushi->setRow(tmpRow);
+    m_destSushi->setCol(tmpCol);
     
-    first->runAction(Sequence::create(
-                                      MoveTo::create(time, posOfSecond),
-                                      MoveTo::create(time, posOfFirst),
+    m_srcSushi->runAction(Sequence::create(
+                                      MoveTo::create(time, posOfDest),
+                                      MoveTo::create(time, posOfSrc),
                                       NULL));
-    second->runAction(Sequence::create(
-                                      MoveTo::create(time, posOfFirst),
-                                      MoveTo::create(time, posOfSecond),
+    m_destSushi->runAction(Sequence::create(
+                                      MoveTo::create(time, posOfSrc),
+                                      MoveTo::create(time, posOfDest),
                                       NULL));
 }
 
@@ -274,7 +280,10 @@ void PlayLayer::getColChain(SushiSprite *sushi, std::list<SushiSprite *> &chainL
     int neighborCol = sushi->getCol() - 1;
     while (neighborCol >= 0) {
         SushiSprite *neighborSushi = m_matrix[sushi->getRow() * m_width + neighborCol];
-        if (neighborSushi && (neighborSushi->getImgIndex() == sushi->getImgIndex())) {
+        if (neighborSushi
+            && (neighborSushi->getImgIndex() == sushi->getImgIndex())
+            && !neighborSushi->getIsNeedRemove()
+            && !neighborSushi->getIgnoreCheck()) {
             chainList.push_back(neighborSushi);
             neighborCol--;
         } else {
@@ -285,7 +294,10 @@ void PlayLayer::getColChain(SushiSprite *sushi, std::list<SushiSprite *> &chainL
     neighborCol = sushi->getCol() + 1;
     while (neighborCol < m_width) {
         SushiSprite *neighborSushi = m_matrix[sushi->getRow() * m_width + neighborCol];
-        if (neighborSushi && (neighborSushi->getImgIndex() == sushi->getImgIndex())) {
+        if (neighborSushi
+            && (neighborSushi->getImgIndex() == sushi->getImgIndex())
+            && !neighborSushi->getIsNeedRemove()
+            && !neighborSushi->getIgnoreCheck()) {
             chainList.push_back(neighborSushi);
             neighborCol++;
         } else {
@@ -301,7 +313,10 @@ void PlayLayer::getRowChain(SushiSprite *sushi, std::list<SushiSprite *> &chainL
     int neighborRow = sushi->getRow() - 1;
     while (neighborRow >= 0) {
         SushiSprite *neighborSushi = m_matrix[neighborRow * m_width + sushi->getCol()];
-        if (neighborSushi && (neighborSushi->getImgIndex() == sushi->getImgIndex())) {
+        if (neighborSushi
+            && (neighborSushi->getImgIndex() == sushi->getImgIndex())
+            && !neighborSushi->getIsNeedRemove()
+            && !neighborSushi->getIgnoreCheck()) {
             chainList.push_back(neighborSushi);
             neighborRow--;
         } else {
@@ -312,7 +327,10 @@ void PlayLayer::getRowChain(SushiSprite *sushi, std::list<SushiSprite *> &chainL
     neighborRow = sushi->getRow() + 1;
     while (neighborRow < m_height) {
         SushiSprite *neighborSushi = m_matrix[neighborRow * m_width + sushi->getCol()];
-        if (neighborSushi && (neighborSushi->getImgIndex() == sushi->getImgIndex())) {
+        if (neighborSushi
+            && (neighborSushi->getImgIndex() == sushi->getImgIndex())
+            && !neighborSushi->getIsNeedRemove()
+            && !neighborSushi->getIgnoreCheck()) {
             chainList.push_back(neighborSushi);
             neighborRow++;
         } else {
@@ -323,6 +341,9 @@ void PlayLayer::getRowChain(SushiSprite *sushi, std::list<SushiSprite *> &chainL
 
 void PlayLayer::fillVacancies()
 {
+    // reset moving direction flag
+    m_movingVertical = true;
+    
     Size size = CCDirector::getInstance()->getWinSize();
     int *colEmptyInfo = (int *)malloc(sizeof(int) * m_width);
     memset((void *)colEmptyInfo, 0, sizeof(int) * m_width);
@@ -369,21 +390,23 @@ void PlayLayer::fillVacancies()
     free(colEmptyInfo);
 }
 
-void PlayLayer::removeSushi(std::list<SushiSprite *> &sushiList)
+void PlayLayer::removeSushi()
 {
     // make sequence remove
     m_isAnimationing = true;
     
-    std::list<SushiSprite *>::iterator itList;
-    for (itList = sushiList.begin(); itList != sushiList.end(); itList++) {
-        SushiSprite *sushi = (SushiSprite *)*itList;
-        // remove sushi from the metrix
-        m_matrix[sushi->getRow() * m_width + sushi->getCol()] = NULL;
-        explodeSushi(sushi);
+    for (int i = 0; i < m_height * m_width; i++) {
+        SushiSprite *sushi = m_matrix[i];
+        if (!sushi) {
+            continue;
+        }
+        
+        if (sushi->getIsNeedRemove()) {
+            m_matrix[sushi->getRow() * m_width + sushi->getCol()] = NULL;
+            // TODO: 检查类型，并播放一行消失的动画
+            explodeSushi(sushi);
+        }
     }
-    
-    // drop to fill empty
-    fillVacancies();
 }
 
 void PlayLayer::explodeSushi(SushiSprite *sushi)
@@ -416,10 +439,28 @@ void PlayLayer::explodeSushi(SushiSprite *sushi)
 
 void PlayLayer::checkAndRemoveChain()
 {
+    SushiSprite *sushi;
+    // 1. reset ingnore flag
     for (int i = 0; i < m_height * m_width; i++) {
-        SushiSprite *sushi = m_matrix[i];
+        sushi = m_matrix[i];
         if (!sushi) {
             continue;
+        }
+        sushi->setIgnoreCheck(false);
+    }
+    
+    // 2. check chain
+    for (int i = 0; i < m_height * m_width; i++) {
+        sushi = m_matrix[i];
+        if (!sushi) {
+            continue;
+        }
+        
+        if (sushi->getIsNeedRemove()) {
+            continue;// 已标记过的跳过检查
+        }
+        if (sushi->getIgnoreCheck()) {
+            continue;// 新变化的特殊寿司，不消除
         }
         
         // start count chain
@@ -430,14 +471,85 @@ void PlayLayer::checkAndRemoveChain()
         getRowChain(sushi, rowChainList);
         
         std::list<SushiSprite *> &longerList = colChainList.size() > rowChainList.size() ? colChainList : rowChainList;
-        if (longerList.size() == 3) {
-            removeSushi(longerList);
-            return;
+        if (longerList.size() < 3) {
+            continue;// 小于3个不消除
         }
-        if (longerList.size() > 3) {
-            //TODO: make a special sushi can clean a line, and remove others
-            removeSushi(longerList);
-            return;
+        
+        std::list<SushiSprite *>::iterator itList;
+        bool isSetedIgnoreCheck = false;
+        for (itList = longerList.begin(); itList != longerList.end(); itList++) {
+            sushi = (SushiSprite *)*itList;
+            if (!sushi) {
+                continue;
+            }
+            
+            if (longerList.size() > 3) {
+                // 4消产生特殊寿司
+                if (sushi == m_srcSushi || sushi == m_destSushi) {
+                    isSetedIgnoreCheck = true;
+                    sushi->setIgnoreCheck(true);
+                    sushi->setIsNeedRemove(false);
+                    sushi->setDisplayMode(m_movingVertical ? DISPLAY_MODE_VERTICAL : DISPLAY_MODE_HORIZONTAL);
+                    continue;
+                }
+            }
+            
+            markRemove(sushi);
+        }
+        
+        // 如何是自由掉落产生的4消, 取最后一个变化为特殊寿司
+        if (!isSetedIgnoreCheck && longerList.size() > 3) {
+            sushi->setIgnoreCheck(true);
+            sushi->setIsNeedRemove(false);
+            sushi->setDisplayMode(m_movingVertical ? DISPLAY_MODE_VERTICAL : DISPLAY_MODE_HORIZONTAL);
+        }
+    }
+    
+    // 3.消除标记了的寿司
+    removeSushi();
+    
+    // 4.掉落并填补空缺
+    fillVacancies();
+}
+
+void PlayLayer::markRemove(SushiSprite *sushi)
+{
+    if (sushi->getIsNeedRemove()) {
+        return;
+    }
+    if (sushi->getIgnoreCheck()) {
+        return;
+    }
+    
+    // mark self
+    sushi->setIsNeedRemove(true);
+    // check for type and mark for certical neighbour
+    if (sushi->getDisplayMode() == DISPLAY_MODE_VERTICAL) {
+        for (int row = 0; row < m_height; row++) {
+            SushiSprite *tmp = m_matrix[row * m_width + sushi->getCol()];
+            if (!tmp || tmp == sushi) {
+                continue;
+            }
+            
+            if (tmp->getDisplayMode() == DISPLAY_MODE_NORMAL) {
+                tmp->setIsNeedRemove(true);
+            } else {
+                markRemove(tmp);
+            }
+        }
+    // check for type and mark for horizontal neighbour
+    } else if (sushi->getDisplayMode() == DISPLAY_MODE_HORIZONTAL) {
+        for (int col = 0; col < m_width; col++) {
+            SushiSprite *tmp = m_matrix[sushi->getRow() * m_width + col];
+            if (!tmp || tmp == sushi) {
+                continue;
+            }
+            
+            if (tmp->getDisplayMode() == DISPLAY_MODE_NORMAL) {
+                tmp->setIsNeedRemove(true);
+            } else {
+                markRemove(tmp);
+            }
         }
     }
 }

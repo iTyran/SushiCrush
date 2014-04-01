@@ -28,8 +28,10 @@ private:
     float m_matrixLeftBottomX;
     float m_matrixLeftBottomY;
     bool m_isTouchEnable;// is need to deal with touch event
-    SushiSprite *m_touchBeganSushi;
+    SushiSprite *m_srcSushi;// 用户移动的寿司
+    SushiSprite *m_destSushi;// 移动到哪个寿司
     bool m_isAnimationing;
+    bool m_movingVertical;// true: 4消除产生纵向炸弹.  false: 4消除产生横向炸弹.
     
     void initMatrix();
     void createAndDropSushi(int row, int col);
@@ -37,11 +39,12 @@ private:
     void checkAndRemoveChain();
     void getColChain(SushiSprite *sushi, std::list<SushiSprite *> &chainList);
     void getRowChain(SushiSprite *sushi, std::list<SushiSprite *> &chainList);
-    void removeSushi(std::list<SushiSprite *> &sushiList);
+    void removeSushi();
     void explodeSushi(SushiSprite *sushi);
     void fillVacancies();
     SushiSprite *sushiOfPoint(Point *point);
-    void swapSushi(SushiSprite *first, SushiSprite *second);
+    void swapSushi();
+    void markRemove(SushiSprite *sushi);
 };
 
 #endif /* defined(__PlayLayer_H__) */

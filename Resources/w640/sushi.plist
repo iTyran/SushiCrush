@@ -4,10 +4,10 @@
     <dict>
         <key>frames</key>
         <dict>
-            <key>sushi_1n.png</key>
+            <key>sushi_1h.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{92,174},{88,84}}</string>
+                <string>{{92,176},{88,84}}</string>
                 <key>offset</key>
                 <string>{-1,1}</string>
                 <key>rotated</key>
@@ -17,7 +17,59 @@
                 <key>sourceSize</key>
                 <string>{90,90}</string>
             </dict>
+            <key>sushi_1n.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{2,350},{88,84}}</string>
+                <key>offset</key>
+                <string>{-1,1}</string>
+                <key>rotated</key>
+                <true/>
+                <key>sourceColorRect</key>
+                <string>{{0,2},{88,84}}</string>
+                <key>sourceSize</key>
+                <string>{90,90}</string>
+            </dict>
+            <key>sushi_1v.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{2,260},{88,84}}</string>
+                <key>offset</key>
+                <string>{-1,1}</string>
+                <key>rotated</key>
+                <true/>
+                <key>sourceColorRect</key>
+                <string>{{0,2},{88,84}}</string>
+                <key>sourceSize</key>
+                <string>{90,90}</string>
+            </dict>
+            <key>sushi_2h.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{182,256},{88,78}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{1,6},{88,78}}</string>
+                <key>sourceSize</key>
+                <string>{90,90}</string>
+            </dict>
             <key>sushi_2n.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{182,176},{88,78}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{1,6},{88,78}}</string>
+                <key>sourceSize</key>
+                <string>{90,90}</string>
+            </dict>
+            <key>sushi_2v.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,176},{88,78}}</string>
@@ -30,10 +82,10 @@
                 <key>sourceSize</key>
                 <string>{90,90}</string>
             </dict>
-            <key>sushi_3n.png</key>
+            <key>sushi_3h.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{2,90},{88,84}}</string>
+                <string>{{362,174},{88,84}}</string>
                 <key>offset</key>
                 <string>{0,1}</string>
                 <key>rotated</key>
@@ -43,7 +95,59 @@
                 <key>sourceSize</key>
                 <string>{90,90}</string>
             </dict>
+            <key>sushi_3n.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{272,174},{88,84}}</string>
+                <key>offset</key>
+                <string>{0,1}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{1,2},{88,84}}</string>
+                <key>sourceSize</key>
+                <string>{90,90}</string>
+            </dict>
+            <key>sushi_3v.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{182,90},{88,84}}</string>
+                <key>offset</key>
+                <string>{0,1}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{1,2},{88,84}}</string>
+                <key>sourceSize</key>
+                <string>{90,90}</string>
+            </dict>
+            <key>sushi_4h.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{186,2},{90,86}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,2},{90,86}}</string>
+                <key>sourceSize</key>
+                <string>{90,90}</string>
+            </dict>
             <key>sushi_4n.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{94,2},{90,86}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,2},{90,86}}</string>
+                <key>sourceSize</key>
+                <string>{90,90}</string>
+            </dict>
+            <key>sushi_4v.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,2},{90,86}}</string>
@@ -56,10 +160,10 @@
                 <key>sourceSize</key>
                 <string>{90,90}</string>
             </dict>
-            <key>sushi_5n.png</key>
+            <key>sushi_5h.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{94,88},{88,84}}</string>
+                <string>{{92,90},{88,84}}</string>
                 <key>offset</key>
                 <string>{0,1}</string>
                 <key>rotated</key>
@@ -69,10 +173,62 @@
                 <key>sourceSize</key>
                 <string>{90,90}</string>
             </dict>
+            <key>sushi_5n.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{2,90},{88,84}}</string>
+                <key>offset</key>
+                <string>{0,1}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{1,2},{88,84}}</string>
+                <key>sourceSize</key>
+                <string>{90,90}</string>
+            </dict>
+            <key>sushi_5v.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{368,88},{88,84}}</string>
+                <key>offset</key>
+                <string>{0,1}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{1,2},{88,84}}</string>
+                <key>sourceSize</key>
+                <string>{90,90}</string>
+            </dict>
+            <key>sushi_6h.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{278,88},{88,84}}</string>
+                <key>offset</key>
+                <string>{-1,1}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,2},{88,84}}</string>
+                <key>sourceSize</key>
+                <string>{90,90}</string>
+            </dict>
             <key>sushi_6n.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{94,2},{88,84}}</string>
+                <string>{{368,2},{88,84}}</string>
+                <key>offset</key>
+                <string>{-1,1}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,2},{88,84}}</string>
+                <key>sourceSize</key>
+                <string>{90,90}</string>
+            </dict>
+            <key>sushi_6v.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{278,2},{88,84}}</string>
                 <key>offset</key>
                 <string>{-1,1}</string>
                 <key>rotated</key>
@@ -90,9 +246,9 @@
             <key>realTextureFileName</key>
             <string>sushi.pvr.ccz</string>
             <key>size</key>
-            <string>{256,512}</string>
+            <string>{512,512}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:9abb9c3ae912e60f7dccefb9afd4196a:9eeac0032bfceff0dee17e9b5f9c8249:786ca0a783f1fd337dac087ee7d0b949$</string>
+            <string>$TexturePacker:SmartUpdate:91b8ca8976c8c0ee15b94b1a2758e136:6cc5ba435d630b150afb09b18545127a:786ca0a783f1fd337dac087ee7d0b949$</string>
             <key>textureFileName</key>
             <string>sushi.pvr.ccz</string>
         </dict>
