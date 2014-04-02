@@ -41,6 +41,10 @@ private:
     void getRowChain(SushiSprite *sushi, std::list<SushiSprite *> &chainList);
     void removeSushi();
     void explodeSushi(SushiSprite *sushi);
+    
+    void explodeSpecialH(Point point);
+    void explodeSpecialV(Point point);
+    
     void fillVacancies();
     SushiSprite *sushiOfPoint(Point *point);
     void swapSushi();

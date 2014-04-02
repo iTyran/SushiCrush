@@ -404,9 +404,77 @@ void PlayLayer::removeSushi()
         if (sushi->getIsNeedRemove()) {
             m_matrix[sushi->getRow() * m_width + sushi->getCol()] = NULL;
             // TODO: 检查类型，并播放一行消失的动画
+            
+            if(sushi->getDisplayMode() == DISPLAY_MODE_HORIZONTAL)
+            {
+                explodeSpecialH(sushi->getPosition());
+            }
+            else if (sushi->getDisplayMode() == DISPLAY_MODE_VERTICAL)
+            {
+                explodeSpecialV(sushi->getPosition());
+            }
             explodeSushi(sushi);
+            
         }
     }
+}
+
+void PlayLayer::explodeSpecialH(Point point)
+{
+    Size size = Director::getInstance()->getWinSize();
+    float scale1 = 4 ;
+    float scale2 = 0.7 ;
+    float time = 0.3;
+    Point startPosition = point;
+    float speed = 1.0f;
+    
+    auto colorSprite1 = Sprite::create("colorH1.png");
+	addChild(colorSprite1, 10);
+    Point endPosition1 = Point(point.x - size.width, point.y);
+    colorSprite1->setPosition(startPosition);
+    colorSprite1->runAction(Sequence::create(ScaleTo::create(time, scale1, scale2),
+                                             MoveTo::create(speed, endPosition1),
+                                             CallFunc::create(CC_CALLBACK_0(Sprite::removeFromParent, colorSprite1)),
+                                             NULL));
+    
+    auto colorSprite2 = Sprite::create("colorH2.png");
+	addChild(colorSprite2, 10);
+    Point endPosition2 = Point(point.x + size.width, point.y);
+    colorSprite2->setPosition(startPosition);
+    colorSprite2->runAction(Sequence::create(ScaleTo::create(time, scale1, scale2),
+                                             MoveTo::create(speed, endPosition2),
+                                             CallFunc::create(CC_CALLBACK_0(Sprite::removeFromParent, colorSprite2)),
+                                             NULL));
+    
+
+}
+
+void PlayLayer::explodeSpecialV(Point point)
+{
+    Size size = Director::getInstance()->getWinSize();
+    float scale1 = 4 ;
+    float scale2 = 0.7 ;
+    float time = 0.3;
+    Point startPosition = point;
+    float speed = 1.0f;
+
+    auto colorSprite1 = Sprite::create("colorV1.png");
+	addChild(colorSprite1, 10);
+    Point endPosition1 = Point(point.x , point.y - size.height);
+    colorSprite1->setPosition(startPosition);
+    colorSprite1->runAction(Sequence::create(ScaleTo::create(time, scale2, scale1),
+                                             MoveTo::create(speed, endPosition1),
+                                             CallFunc::create(CC_CALLBACK_0(Sprite::removeFromParent, colorSprite1)),
+                                             NULL));
+    
+    auto colorSprite2 = Sprite::create("colorV2.png");
+	addChild(colorSprite2, 10);
+    Point endPosition2 = Point(point.x , point.y + size.height);
+    colorSprite2->setPosition(startPosition);    
+    colorSprite2->runAction(Sequence::create(ScaleTo::create(time, scale2, scale1),
+                                             MoveTo::create(speed, endPosition2),
+                                             CallFunc::create(CC_CALLBACK_0(Sprite::removeFromParent, colorSprite2)),
+                                             NULL));
 }
 
 void PlayLayer::explodeSushi(SushiSprite *sushi)
