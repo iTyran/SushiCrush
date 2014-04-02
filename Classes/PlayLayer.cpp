@@ -653,7 +653,7 @@ void PlayLayer::createAndDropSushi(int row, int col)
     Point endPosition = positionOfItem(row, col);
     Point startPosition = Point(endPosition.x, endPosition.y + size.height / 2);
     sushi->setPosition(startPosition);
-    float speed = 0.8;
+    float speed = startPosition.y / (1.5 * size.height);
     sushi->runAction(MoveTo::create(speed, endPosition));
     // add to BatchNode
     spriteSheet->addChild(sushi);
