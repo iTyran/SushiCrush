@@ -13,6 +13,7 @@ PlayLayer::PlayLayer()
 , m_height(0)
 , m_matrixLeftBottomX(0)
 , m_matrixLeftBottomY(0)
+, m_isNeedFillVacancies(false)
 , m_isAnimationing(true)//start with drop animation
 , m_isTouchEnable(true)
 , m_srcSushi(NULL)
@@ -268,7 +269,13 @@ void PlayLayer::update(float dt)
     m_isTouchEnable = !m_isAnimationing;
     
     if (!m_isAnimationing) {
-        checkAndRemoveChain();
+        if (m_isNeedFillVacancies) {
+            //爆炸效果结束后才掉落新寿司，增强打击感
+            fillVacancies();
+            m_isNeedFillVacancies = false;
+        } else {
+            checkAndRemoveChain();
+        }
     }
 }
 
@@ -343,6 +350,7 @@ void PlayLayer::fillVacancies()
 {
     // reset moving direction flag
     m_movingVertical = true;
+    m_isAnimationing = true;
     
     Size size = CCDirector::getInstance()->getWinSize();
     int *colEmptyInfo = (int *)malloc(sizeof(int) * m_width);
@@ -402,7 +410,7 @@ void PlayLayer::removeSushi()
         }
         
         if (sushi->getIsNeedRemove()) {
-            m_matrix[sushi->getRow() * m_width + sushi->getCol()] = NULL;
+            m_isNeedFillVacancies = true;//需要掉落
             // TODO: 检查类型，并播放一行消失的动画
             
             if(sushi->getDisplayMode() == DISPLAY_MODE_HORIZONTAL)
@@ -422,28 +430,28 @@ void PlayLayer::removeSushi()
 void PlayLayer::explodeSpecialH(Point point)
 {
     Size size = Director::getInstance()->getWinSize();
-    float scale1 = 4 ;
-    float scale2 = 0.7 ;
+    float scaleX = 4 ;
+    float scaleY = 0.7 ;
     float time = 0.3;
     Point startPosition = point;
-    float speed = 1.0f;
+    float speed = 0.6f;
     
-    auto colorSprite1 = Sprite::create("colorH1.png");
-	addChild(colorSprite1, 10);
+    auto colorSpriteRight = Sprite::create("colorHRight.png");
+	addChild(colorSpriteRight, 10);
     Point endPosition1 = Point(point.x - size.width, point.y);
-    colorSprite1->setPosition(startPosition);
-    colorSprite1->runAction(Sequence::create(ScaleTo::create(time, scale1, scale2),
+    colorSpriteRight->setPosition(startPosition);
+    colorSpriteRight->runAction(Sequence::create(ScaleTo::create(time, scaleX, scaleY),
                                              MoveTo::create(speed, endPosition1),
-                                             CallFunc::create(CC_CALLBACK_0(Sprite::removeFromParent, colorSprite1)),
+                                             CallFunc::create(CC_CALLBACK_0(Sprite::removeFromParent, colorSpriteRight)),
                                              NULL));
     
-    auto colorSprite2 = Sprite::create("colorH2.png");
-	addChild(colorSprite2, 10);
+    auto colorSpriteLeft = Sprite::create("colorHLeft.png");
+	addChild(colorSpriteLeft, 10);
     Point endPosition2 = Point(point.x + size.width, point.y);
-    colorSprite2->setPosition(startPosition);
-    colorSprite2->runAction(Sequence::create(ScaleTo::create(time, scale1, scale2),
+    colorSpriteLeft->setPosition(startPosition);
+    colorSpriteLeft->runAction(Sequence::create(ScaleTo::create(time, scaleX, scaleY),
                                              MoveTo::create(speed, endPosition2),
-                                             CallFunc::create(CC_CALLBACK_0(Sprite::removeFromParent, colorSprite2)),
+                                             CallFunc::create(CC_CALLBACK_0(Sprite::removeFromParent, colorSpriteLeft)),
                                              NULL));
     
 
@@ -452,29 +460,36 @@ void PlayLayer::explodeSpecialH(Point point)
 void PlayLayer::explodeSpecialV(Point point)
 {
     Size size = Director::getInstance()->getWinSize();
-    float scale1 = 4 ;
-    float scale2 = 0.7 ;
+    float scaleY = 4 ;
+    float scaleX = 0.7 ;
     float time = 0.3;
     Point startPosition = point;
-    float speed = 1.0f;
+    float speed = 0.6f;
 
-    auto colorSprite1 = Sprite::create("colorV1.png");
-	addChild(colorSprite1, 10);
+    auto colorSpriteDown = Sprite::create("colorVDown.png");
+	addChild(colorSpriteDown, 10);
     Point endPosition1 = Point(point.x , point.y - size.height);
-    colorSprite1->setPosition(startPosition);
-    colorSprite1->runAction(Sequence::create(ScaleTo::create(time, scale2, scale1),
+    colorSpriteDown->setPosition(startPosition);
+    colorSpriteDown->runAction(Sequence::create(ScaleTo::create(time, scaleX, scaleY),
                                              MoveTo::create(speed, endPosition1),
-                                             CallFunc::create(CC_CALLBACK_0(Sprite::removeFromParent, colorSprite1)),
+                                             CallFunc::create(CC_CALLBACK_0(Sprite::removeFromParent, colorSpriteDown)),
                                              NULL));
     
-    auto colorSprite2 = Sprite::create("colorV2.png");
-	addChild(colorSprite2, 10);
+    auto colorSpriteUp = Sprite::create("colorVUp.png");
+	addChild(colorSpriteUp, 10);
     Point endPosition2 = Point(point.x , point.y + size.height);
-    colorSprite2->setPosition(startPosition);    
-    colorSprite2->runAction(Sequence::create(ScaleTo::create(time, scale2, scale1),
+    colorSpriteUp->setPosition(startPosition);
+    colorSpriteUp->runAction(Sequence::create(ScaleTo::create(time, scaleX, scaleY),
                                              MoveTo::create(speed, endPosition2),
-                                             CallFunc::create(CC_CALLBACK_0(Sprite::removeFromParent, colorSprite2)),
+                                             CallFunc::create(CC_CALLBACK_0(Sprite::removeFromParent, colorSpriteUp)),
                                              NULL));
+}
+
+void PlayLayer::actionEndCallback(Node *node)
+{
+    SushiSprite *sushi = (SushiSprite *)node;
+    m_matrix[sushi->getRow() * m_width + sushi->getCol()] = NULL;
+    sushi->removeFromParent();
 }
 
 void PlayLayer::explodeSushi(SushiSprite *sushi)
@@ -484,7 +499,7 @@ void PlayLayer::explodeSushi(SushiSprite *sushi)
     // 1. action for sushi
     sushi->runAction(Sequence::create(
                                       ScaleTo::create(time, 0.0),
-                                      CallFunc::create(CC_CALLBACK_0(Sprite::removeFromParent, sushi)),
+                                      CallFuncN::create(CC_CALLBACK_1(PlayLayer::actionEndCallback, this)),
                                       NULL));
     
     // 2. action for circle
@@ -575,9 +590,6 @@ void PlayLayer::checkAndRemoveChain()
     
     // 3.消除标记了的寿司
     removeSushi();
-    
-    // 4.掉落并填补空缺
-    fillVacancies();
 }
 
 void PlayLayer::markRemove(SushiSprite *sushi)
@@ -641,7 +653,7 @@ void PlayLayer::createAndDropSushi(int row, int col)
     Point endPosition = positionOfItem(row, col);
     Point startPosition = Point(endPosition.x, endPosition.y + size.height / 2);
     sushi->setPosition(startPosition);
-    float speed = startPosition.y / (2 * size.height);
+    float speed = 0.8;
     sushi->runAction(MoveTo::create(speed, endPosition));
     // add to BatchNode
     spriteSheet->addChild(sushi);
