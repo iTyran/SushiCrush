@@ -13,6 +13,7 @@ PlayLayer::PlayLayer()
 , m_height(0)
 , m_matrixLeftBottomX(0)
 , m_matrixLeftBottomY(0)
+, m_isNeedFillVacancies(false)
 , m_isAnimationing(true)//start with drop animation
 , m_isTouchEnable(true)
 , m_srcSushi(NULL)
@@ -268,7 +269,13 @@ void PlayLayer::update(float dt)
     m_isTouchEnable = !m_isAnimationing;
     
     if (!m_isAnimationing) {
-        checkAndRemoveChain();
+        if (m_isNeedFillVacancies) {
+            //爆炸效果结束后才掉落新寿司，增强打击感
+            fillVacancies();
+            m_isNeedFillVacancies = false;
+        } else {
+            checkAndRemoveChain();
+        }
     }
 }
 
@@ -343,6 +350,7 @@ void PlayLayer::fillVacancies()
 {
     // reset moving direction flag
     m_movingVertical = true;
+    m_isAnimationing = true;
     
     Size size = CCDirector::getInstance()->getWinSize();
     int *colEmptyInfo = (int *)malloc(sizeof(int) * m_width);
@@ -402,11 +410,18 @@ void PlayLayer::removeSushi()
         }
         
         if (sushi->getIsNeedRemove()) {
-            m_matrix[sushi->getRow() * m_width + sushi->getCol()] = NULL;
+            m_isNeedFillVacancies = true;//需要掉落
             // TODO: 检查类型，并播放一行消失的动画
             explodeSushi(sushi);
         }
     }
+}
+
+void PlayLayer::actionEndCallback(Node *node)
+{
+    SushiSprite *sushi = (SushiSprite *)node;
+    m_matrix[sushi->getRow() * m_width + sushi->getCol()] = NULL;
+    sushi->removeFromParent();
 }
 
 void PlayLayer::explodeSushi(SushiSprite *sushi)
@@ -416,7 +431,7 @@ void PlayLayer::explodeSushi(SushiSprite *sushi)
     // 1. action for sushi
     sushi->runAction(Sequence::create(
                                       ScaleTo::create(time, 0.0),
-                                      CallFunc::create(CC_CALLBACK_0(Sprite::removeFromParent, sushi)),
+                                      CallFuncN::create(CC_CALLBACK_1(PlayLayer::actionEndCallback, this)),
                                       NULL));
     
     // 2. action for circle
@@ -507,9 +522,6 @@ void PlayLayer::checkAndRemoveChain()
     
     // 3.消除标记了的寿司
     removeSushi();
-    
-    // 4.掉落并填补空缺
-    fillVacancies();
 }
 
 void PlayLayer::markRemove(SushiSprite *sushi)

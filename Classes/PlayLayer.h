@@ -31,6 +31,7 @@ private:
     SushiSprite *m_srcSushi;// 用户移动的寿司
     SushiSprite *m_destSushi;// 移动到哪个寿司
     bool m_isAnimationing;
+    bool m_isNeedFillVacancies;//是否有空缺需要填补
     bool m_movingVertical;// true: 4消除产生纵向炸弹.  false: 4消除产生横向炸弹.
     
     void initMatrix();
@@ -40,6 +41,7 @@ private:
     void getColChain(SushiSprite *sushi, std::list<SushiSprite *> &chainList);
     void getRowChain(SushiSprite *sushi, std::list<SushiSprite *> &chainList);
     void removeSushi();
+    void actionEndCallback(Node *node);
     void explodeSushi(SushiSprite *sushi);
     void fillVacancies();
     SushiSprite *sushiOfPoint(Point *point);
