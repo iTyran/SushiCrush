@@ -101,6 +101,8 @@ SushiSprite *PlayLayer::sushiOfPoint(Point *point)
 
 bool PlayLayer::onTouchBegan(Touch *touch, Event *unused)
 {
+    m_srcSushi = NULL;
+    m_destSushi = NULL;
     if (m_isTouchEnable) {
         auto location = touch->getLocation();
         m_srcSushi = sushiOfPoint(&location);
