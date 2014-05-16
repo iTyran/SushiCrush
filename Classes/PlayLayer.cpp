@@ -48,7 +48,7 @@ bool PlayLayer::init()
     auto background = Sprite::create("background.png");
     background->setAnchorPoint(Point(0, 1));
     background->setPosition(Point(0, winSize.height));
-    this->addChild(background);
+    this->addChild(background,-1);
     
     // init spriteSheet
     SpriteFrameCache::getInstance()->addSpriteFramesWithFile("sushi.plist");
